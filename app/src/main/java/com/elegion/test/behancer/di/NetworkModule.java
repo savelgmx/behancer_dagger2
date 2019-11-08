@@ -5,6 +5,8 @@ import com.elegion.test.behancer.data.api.ApiKeyInterceptor;
 import com.elegion.test.behancer.data.api.BehanceApi;
 import com.google.gson.Gson;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -22,10 +24,18 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public class NetworkModule {
 
+    OkHttpClient innerClient = new OkHttpClient.Builder()
+            .connectTimeout(5, TimeUnit.MINUTES) // connect timeout
+            .writeTimeout(5, TimeUnit.MINUTES) // write timeout
+            .readTimeout(5, TimeUnit.MINUTES) // read timeout
+            .build();
+
     @Provides
     @Singleton
     OkHttpClient provideClient() {
         OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
+        builder.connectTimeout(5, TimeUnit.MINUTES);
+
         builder.addInterceptor(new ApiKeyInterceptor());
         if (!BuildConfig.BUILD_TYPE.contains("release")) {
             builder.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
