@@ -54,6 +54,7 @@ public class ProjectsFragment extends PresenterFragment<ProjectsPresenter> imple
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
 
+
         super.onCreate(savedInstanceState);
         AppDelegate.getAppComponent().inject(this);
     }
@@ -80,6 +81,7 @@ public class ProjectsFragment extends PresenterFragment<ProjectsPresenter> imple
 
         AppDelegate.getAppComponent().inject(this);
         mPresenter.setView(this);
+
         mProjectsAdapter = new ProjectsAdapter(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mProjectsAdapter);

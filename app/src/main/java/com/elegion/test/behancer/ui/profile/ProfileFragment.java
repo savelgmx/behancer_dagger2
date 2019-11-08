@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.elegion.test.behancer.AppDelegate;
 import com.elegion.test.behancer.R;
 import com.elegion.test.behancer.common.RefreshOwner;
 import com.elegion.test.behancer.common.Refreshable;
@@ -19,13 +20,15 @@ import com.elegion.test.behancer.data.model.user.User;
 import com.elegion.test.behancer.utils.DateUtils;
 import com.squareup.picasso.Picasso;
 
+import javax.inject.Inject;
+
 import io.reactivex.disposables.Disposable;
 
 /**
  * Created by Vladislav Falzan.
  */
 
-public class ProfileFragment extends Fragment implements Refreshable {
+public class ProfileFragment extends Fragment implements Refreshable,ProfileView {
 
     public static final String PROFILE_KEY = "PROFILE_KEY";
 
@@ -40,6 +43,9 @@ public class ProfileFragment extends Fragment implements Refreshable {
     private TextView mProfileName;
     private TextView mProfileCreatedOn;
     private TextView mProfileLocation;
+
+    @Inject
+    ProfilePresenter mProfilePresenter;
 
     public static ProfileFragment newInstance(Bundle args) {
         ProfileFragment fragment = new ProfileFragment();
@@ -84,38 +90,42 @@ public class ProfileFragment extends Fragment implements Refreshable {
             getActivity().setTitle(mUsername);
         }
 
+        AppDelegate.getAppComponent().inject(this);
+        mProfilePresenter.setView(this);
         mProfileView.setVisibility(View.VISIBLE);
+
 
         onRefreshData();
     }
 
     @Override
     public void onRefreshData() {
-        getProfile();
+        mProfilePresenter.getProfile(mUsername);
     }
 
-    private void getProfile() {
- /*       mDisposable = ApiUtils.getApiService().getUserInfo(mUsername)
-                .subscribeOn(Schedulers.io())
-                .doOnSuccess(response -> mStorage.insertUser(response))
-                .onErrorReturn(throwable ->
-                        ApiUtils.NETWORK_EXCEPTIONS.contains(throwable.getClass()) ?
-                                mStorage.getUser(mUsername) :
-                                null)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(disposable -> mRefreshOwner.setRefreshState(true))
-                .doFinally(() -> mRefreshOwner.setRefreshState(false))
-                .subscribe(
-                        response -> {
-                            mErrorView.setVisibility(View.GONE);
-                            mProfileView.setVisibility(View.VISIBLE);
-                            bind(response.getUser());
-                        },
-                        throwable -> {
-                            mErrorView.setVisibility(View.VISIBLE);
-                            mProfileView.setVisibility(View.GONE);
-                        });
-*/    }
+    @Override
+    public void showRefresh() {
+
+    }
+
+    @Override
+    public void hideRefresh() {
+
+    }
+
+    @Override
+    public void showError() {
+        mErrorView.setVisibility(View.VISIBLE);
+        mProfileView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showProfile(User user) {
+        mErrorView.setVisibility(View.GONE);
+        mProfileView.setVisibility(View.VISIBLE);
+        bind(user);
+
+    }
 
     private void bind(User user) {
         Picasso.with(getContext())
@@ -136,4 +146,6 @@ public class ProfileFragment extends Fragment implements Refreshable {
         }
         super.onDetach();
     }
+
+
 }
