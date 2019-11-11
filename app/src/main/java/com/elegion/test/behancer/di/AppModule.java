@@ -13,6 +13,7 @@ import dagger.Provides;
 
 /**
  * Created by tanchuev on 23.04.2018.
+ * ready for Custom Scope new branch
  */
 
 @Module
