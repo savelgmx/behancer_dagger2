@@ -34,7 +34,7 @@ public class ProjectsFragment extends PresenterFragment<ProjectsPresenter> imple
     private RecyclerView mRecyclerView;
     private RefreshOwner mRefreshOwner;
     private View mErrorView;
-    private Storage mStorage;
+   // private Storage mStorage;
     private ProjectsAdapter mProjectsAdapter;
     @Inject
     ProjectsPresenter mPresenter;
@@ -52,13 +52,13 @@ public class ProjectsFragment extends PresenterFragment<ProjectsPresenter> imple
         }
     }
 
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+ /*   public void onCreate(@Nullable Bundle savedInstanceState) {
 
 
         super.onCreate(savedInstanceState);
         AppDelegate.getAppComponent().inject(this);
     }
-
+*/
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -96,7 +96,7 @@ public class ProjectsFragment extends PresenterFragment<ProjectsPresenter> imple
 
     @Override
     public void onDetach() {
-        mStorage = null;
+        //mStorage = null;
         mRefreshOwner = null;
         super.onDetach();
     }

@@ -13,10 +13,14 @@ import android.widget.TextView;
 
 import com.elegion.test.behancer.AppDelegate;
 import com.elegion.test.behancer.R;
+
 import com.elegion.test.behancer.common.RefreshOwner;
 import com.elegion.test.behancer.common.Refreshable;
 import com.elegion.test.behancer.data.Storage;
 import com.elegion.test.behancer.data.model.user.User;
+import com.elegion.test.behancer.di.DaggerAppComponent;
+import com.elegion.test.behancer.di.DaggerViewComponent;
+import com.elegion.test.behancer.di.ViewModule;
 import com.elegion.test.behancer.utils.DateUtils;
 import com.squareup.picasso.Picasso;
 
@@ -36,8 +40,8 @@ public class ProfileFragment extends Fragment implements Refreshable,ProfileView
     private View mErrorView;
     private View mProfileView;
     private String mUsername;
-    private Storage mStorage;
-    private Disposable mDisposable;
+    //private Storage mStorage;
+
 
     private ImageView mProfileImage;
     private TextView mProfileName;
@@ -90,14 +94,22 @@ public class ProfileFragment extends Fragment implements Refreshable,ProfileView
             getActivity().setTitle(mUsername);
         }
 
-        AppDelegate.getAppComponent().inject(this);
-        mProfilePresenter.setView(this);
+        DaggerViewComponent
+                .builder()
+                .appComponent(AppDelegate.getAppComponent())
+                .viewModule(new ViewModule(this))
+                .build()
+                .inject(this);
         mProfileView.setVisibility(View.VISIBLE);
 
 
         onRefreshData();
     }
 
+    @Override
+    protected ProfilePresenter getPresenter() {
+        return mProfilePresenter;
+    }
     @Override
     public void onRefreshData() {
         mProfilePresenter.getProfile(mUsername);
@@ -136,14 +148,15 @@ public class ProfileFragment extends Fragment implements Refreshable,ProfileView
         mProfileCreatedOn.setText(DateUtils.format(user.getCreatedOn()));
         mProfileLocation.setText(user.getLocation());
     }
-
     @Override
     public void onDetach() {
-        mStorage = null;
+        //mStorage = null;
         mRefreshOwner = null;
+/*
         if (mDisposable != null) {
             mDisposable.dispose();
         }
+*/
         super.onDetach();
     }
 
