@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.elegion.test.behancer.AppDelegate;
 import com.elegion.test.behancer.R;
 
+import com.elegion.test.behancer.common.PresenterFragment;
 import com.elegion.test.behancer.common.RefreshOwner;
 import com.elegion.test.behancer.common.Refreshable;
 import com.elegion.test.behancer.data.Storage;
@@ -32,7 +33,7 @@ import io.reactivex.disposables.Disposable;
  * Created by Vladislav Falzan.
  */
 
-public class ProfileFragment extends Fragment implements Refreshable,ProfileView {
+public class ProfileFragment extends PresenterFragment<ProfilePresenter> implements Refreshable,ProfileView {
 
     public static final String PROFILE_KEY = "PROFILE_KEY";
 
