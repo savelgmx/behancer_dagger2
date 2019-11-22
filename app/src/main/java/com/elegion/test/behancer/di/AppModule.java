@@ -5,6 +5,7 @@ import android.arch.persistence.room.Room;
 import com.elegion.test.behancer.AppDelegate;
 import com.elegion.test.behancer.data.Storage;
 import com.elegion.test.behancer.data.database.BehanceDatabase;
+import com.elegion.test.behancer.utils.PicassoLoader;
 
 import javax.inject.Singleton;
 
@@ -39,5 +40,11 @@ public class AppModule {
                 .build();
 
         return new Storage(database.getBehanceDao());
+    }
+    // Picasso Loader нужен для отображения  userpic в ProfileFragment
+    @Provides
+    @Singleton
+    PicassoLoader providePicassoLoader(){
+        return new PicassoLoader();
     }
 }

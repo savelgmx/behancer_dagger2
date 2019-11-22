@@ -17,13 +17,12 @@ import com.elegion.test.behancer.R;
 import com.elegion.test.behancer.common.PresenterFragment;
 import com.elegion.test.behancer.common.RefreshOwner;
 import com.elegion.test.behancer.common.Refreshable;
-import com.elegion.test.behancer.data.Storage;
 import com.elegion.test.behancer.data.model.user.User;
-import com.elegion.test.behancer.di.DaggerAppComponent;
 import com.elegion.test.behancer.di.DaggerViewComponent;
 import com.elegion.test.behancer.di.ViewModule;
 import com.elegion.test.behancer.utils.DateUtils;
-import com.squareup.picasso.Picasso;
+import com.elegion.test.behancer.utils.PicassoLoader;
+
 
 import javax.inject.Inject;
 
@@ -37,13 +36,12 @@ public class ProfileFragment extends PresenterFragment<ProfilePresenter> impleme
 
     public static final String PROFILE_KEY = "PROFILE_KEY";
 
+    @Inject
+    PicassoLoader mPicassoLoader;
     private RefreshOwner mRefreshOwner;
     private View mErrorView;
     private View mProfileView;
     private String mUsername;
-    //private Storage mStorage;
-
-
     private ImageView mProfileImage;
     private TextView mProfileName;
     private TextView mProfileCreatedOn;
@@ -62,7 +60,6 @@ public class ProfileFragment extends PresenterFragment<ProfilePresenter> impleme
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        //mStorage = context instanceof Storage.StorageOwner ? ((Storage.StorageOwner) context).obtainStorage() : null;
         mRefreshOwner = context instanceof RefreshOwner ? (RefreshOwner) context : null;
     }
 
@@ -116,14 +113,31 @@ public class ProfileFragment extends PresenterFragment<ProfilePresenter> impleme
         mProfilePresenter.getProfile(mUsername);
     }
 
+
+    @Override
+    public void showProfile(@NonNull User user) {
+        mErrorView.setVisibility(View.GONE);
+        mProfileView.setVisibility(View.VISIBLE);
+
+
+        /*Picasso.with(getContext())
+                .load(user.getImage().getPhotoUrl())
+                .fit()
+                .into(mProfileImage);*/
+
+        mPicassoLoader.load(getContext(), user.getImage().getPhotoUrl(), mProfileImage);
+        mProfileName.setText(user.getDisplayName());
+        mProfileCreatedOn.setText(DateUtils.format(user.getCreatedOn()));
+        mProfileLocation.setText(user.getLocation());
+    }
     @Override
     public void showRefresh() {
-
+        mRefreshOwner.setRefreshState(true);
     }
 
     @Override
     public void hideRefresh() {
-
+        mRefreshOwner.setRefreshState(false);
     }
 
     @Override
@@ -131,33 +145,9 @@ public class ProfileFragment extends PresenterFragment<ProfilePresenter> impleme
         mErrorView.setVisibility(View.VISIBLE);
         mProfileView.setVisibility(View.GONE);
     }
-
-    @Override
-    public void showProfile(User user) {
-        mErrorView.setVisibility(View.GONE);
-        mProfileView.setVisibility(View.VISIBLE);
-        bind(user);
-
-    }
-
-    private void bind(User user) {
-        Picasso.with(getContext())
-                .load(user.getImage().getPhotoUrl())
-                .fit()
-                .into(mProfileImage);
-        mProfileName.setText(user.getDisplayName());
-        mProfileCreatedOn.setText(DateUtils.format(user.getCreatedOn()));
-        mProfileLocation.setText(user.getLocation());
-    }
     @Override
     public void onDetach() {
-        //mStorage = null;
-        mRefreshOwner = null;
-/*
-        if (mDisposable != null) {
-            mDisposable.dispose();
-        }
-*/
+         mRefreshOwner = null;
         super.onDetach();
     }
 

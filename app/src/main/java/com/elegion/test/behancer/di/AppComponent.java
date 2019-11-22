@@ -4,6 +4,7 @@ import com.elegion.test.behancer.data.Storage;
 import com.elegion.test.behancer.data.api.BehanceApi;
 import com.elegion.test.behancer.ui.profile.ProfileFragment;
 import com.elegion.test.behancer.ui.projects.ProjectsFragment;
+import com.elegion.test.behancer.utils.PicassoLoader;
 
 import javax.inject.Singleton;
 
@@ -18,7 +19,7 @@ import dagger.Component;
 public interface AppComponent {
     Storage provideStorage();
     BehanceApi provideApiService();
-  //  PicassoLoader providePicassoLoader();
+    PicassoLoader providePicassoLoader();
 
     void inject(ProjectsFragment injector);
   //  void inject(ProfileFragment injector);
