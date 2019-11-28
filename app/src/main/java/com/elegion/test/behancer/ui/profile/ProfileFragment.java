@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.elegion.test.behancer.AppDelegate;
 import com.elegion.test.behancer.R;
 
@@ -33,6 +35,7 @@ import io.reactivex.disposables.Disposable;
  */
 
 public class ProfileFragment extends PresenterFragment<ProfilePresenter> implements Refreshable,ProfileView {
+//public class ProfileFragment extends PresenterFragment implements Refreshable,ProfileView {
 
     public static final String PROFILE_KEY = "PROFILE_KEY";
 
@@ -47,8 +50,11 @@ public class ProfileFragment extends PresenterFragment<ProfilePresenter> impleme
     private TextView mProfileCreatedOn;
     private TextView mProfileLocation;
 
-    @Inject
+    @InjectPresenter
     ProfilePresenter mProfilePresenter;
+
+    @ProvidePresenter
+    ProfilePresenter providePresenter(){return new ProfilePresenter();}
 
     public static ProfileFragment newInstance(Bundle args) {
         ProfileFragment fragment = new ProfileFragment();
