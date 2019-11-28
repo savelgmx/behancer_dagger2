@@ -1,6 +1,7 @@
 package com.elegion.test.behancer.ui.profile;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.elegion.test.behancer.common.BasePresenter;
@@ -33,6 +34,7 @@ public class ProfilePresenter extends BasePresenter<ProfileView> {
 
 
     public void getProfile(@NonNull String username){
+        Log.d("behancer_dagger2","username: "+username);
         mCompositeDisposable.add(
                 mApi.getUserInfo(username)
                 .subscribeOn(Schedulers.io())

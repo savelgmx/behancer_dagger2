@@ -50,6 +50,10 @@ public class ProfileFragment extends PresenterFragment<ProfilePresenter> impleme
     private TextView mProfileCreatedOn;
     private TextView mProfileLocation;
 
+    //дополнительный @Inject ниже нужен чтобы заставить мокси дружить с даггером.
+    //почерпнуто отсюда https://github.com/Arello-Mobile/Moxy/issues/100
+
+    @Inject
     @InjectPresenter
     ProfilePresenter mProfilePresenter;
 
